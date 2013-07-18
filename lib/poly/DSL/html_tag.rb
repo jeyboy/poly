@@ -32,8 +32,8 @@ module DSL
 
       def parameters_proceeding(content_or_attributes, &block)
         @tag_attributes, @tag_content =
-          if block
-            [content_or_attributes.first || {}, block.call(self).to_s]
+          if block_given?
+            [content_or_attributes.first || {}, yield(self) .to_s]
           else
             throw Exception.new('Attributes count is invalid') if content_or_attributes.length == 0
             [content_or_attributes.length == 1 ? {} : content_or_attributes.first, content_or_attributes.last || '']

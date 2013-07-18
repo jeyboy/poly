@@ -1,9 +1,7 @@
 module Poly
   module Dsl
     module Controllers
-      class Base
-
-      end
+      require 'poly/dsl/controllers/base'
     end
   end
 end

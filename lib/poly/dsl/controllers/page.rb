@@ -1,7 +1,7 @@
 module Poly
   module Dsl
     module Controllers
-      class Base
+      class Page < Base
 
       end
     end

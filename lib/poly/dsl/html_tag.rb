@@ -1,5 +1,5 @@
 module Poly
-  module DSL
+  module Dsl
     class HtmlTag
       DELIMITER_TAGS = %w(br base bgsound frame hr img link meta)
       attr_accessor :tag_name, :tag_attributes, :tag_content
@@ -20,8 +20,8 @@ module Poly
       protected
         def format_attributes
           attrs_str = case tag_attributes.class.name
-            when 'String'
-              tag_attributes
+            when 'String', 'NilClass'
+              tag_attributes.to_s
             when 'Hash'
               "#{tag_attributes.map {|k,v| "#{k}=#{v}"}.join(',')}"
             else
@@ -34,9 +34,10 @@ module Poly
         def parameters_proceeding(content_or_attributes, &block)
           @tag_attributes, @tag_content =
             if block_given?
-              [content_or_attributes.first || {}, yield(self) .to_s]
+              [content_or_attributes.first || Hash.new, yield(self).to_s]
+              #[content_or_attributes.first || {}, Content.new(&block).to_s]
             else
-              throw Exception.new('Attributes count is invalid') if content_or_attributes.length == 0
+              raise Exception.new('Attributes count is invalid') if content_or_attributes.length == 0
               [content_or_attributes.length == 1 ? {} : content_or_attributes.first, content_or_attributes.last || '']
             end
         end

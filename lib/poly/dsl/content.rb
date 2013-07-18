@@ -11,14 +11,14 @@ module Poly
 
       OLD_TAG_WHITELIST = %w(acronym applet basefont big dir font frame frameset noframes strike tt)
 
-      attr_writer :strout
+      attr_writer :node_list
 
-      def strout
-        @strout ||= ''
+      def node_list
+        @node_list ||= []
       end
 
       def to_s
-        strout
+        node_list.join(' ')
       end
 
       def p(*args, &block)
@@ -34,7 +34,7 @@ module Poly
 
       protected
         def proceed(name, *args, &block)
-          strout = HtmlTag.new(name, *args, &block).to_s
+          node_list << HtmlTag.new(str_name, *args, &block)
         end
     end
   end

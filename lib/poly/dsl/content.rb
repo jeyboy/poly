@@ -13,6 +13,10 @@ module Poly
 
       attr_writer :node_list
 
+      TAG_WHITELIST.each do |method_name|
+        define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
+      end
+
       def node_list
         @node_list ||= []
       end
@@ -21,20 +25,16 @@ module Poly
         node_list.join(' ')
       end
 
-      def p(*args, &block)
-        proceed('p', *args, &block)
-      end
-
-      def method_missing name, *args, &block
-        str_name = name.to_s.downcase
-        if TAG_WHITELIST.include?(str_name)
-          proceed(str_name, *args, &block)
-        end
-      end
+      #def method_missing name, *args, &block
+      #  str_name = name.to_s.downcase
+      #  if TAG_WHITELIST.include?(str_name)
+      #    proceed(str_name, *args, &block)
+      #  end
+      #end
 
       protected
         def proceed(name, *args, &block)
-          node_list << HtmlTag.new(str_name, *args, &block)
+          node_list << HtmlTag.new(name, *args, &block)
         end
     end
   end

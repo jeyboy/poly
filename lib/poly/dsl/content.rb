@@ -25,12 +25,13 @@ module Poly
         node_list.join(' ')
       end
 
-      #def method_missing name, *args, &block
-      #  str_name = name.to_s.downcase
-      #  if TAG_WHITELIST.include?(str_name)
-      #    proceed(str_name, *args, &block)
-      #  end
-      #end
+      def raw(text)
+        node_list << text
+      end
+
+      def method_missing name, *args, &block
+        node_list << name.to_s.downcase
+      end
 
       protected
         def proceed(name, *args, &block)

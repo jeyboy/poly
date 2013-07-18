@@ -1,5 +1,5 @@
 require 'poly/version'
-require 'poly/dsl/view'
+require 'poly/dsl/views'
 
 module Poly
   mattr_accessor :default_paths

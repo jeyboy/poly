@@ -1,6 +1,6 @@
 module Poly
   module Dsl
-    module View
+    module Views
       class HtmlTag
         DELIMITER_TAGS = %w(br base bgsound frame hr img link meta)
         attr_accessor :tag_name, :tag_attributes, :tag_content
@@ -34,7 +34,7 @@ module Poly
             @tag_attributes, @tag_content =
               if block_given?
                 #[content_or_attributes.first || Hash.new, yield(self).to_s]
-                [content_or_attributes.first || {}, Content.new(&block).to_s]
+                [content_or_attributes.first || {}, View.new(&block).to_s]
               else
                 raise 'Attributes count is invalid' if content_or_attributes.length == 0
                 [content_or_attributes.length == 1 ? {} : content_or_attributes.first, content_or_attributes.last || '']

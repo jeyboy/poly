@@ -1,6 +1,6 @@
 module Poly
   module Dsl
-    module View
+    module Views
       class Base
         def initialize &block
           instance_eval(&block) if block_given?

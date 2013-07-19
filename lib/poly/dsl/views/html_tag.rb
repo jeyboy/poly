@@ -5,9 +5,9 @@ module Poly
         DELIMITER_TAGS = %w(br base bgsound frame hr img link meta)
         attr_accessor :tag_name, :tag_attributes, :tag_content
 
-        def initialize name, *content_or_attributes, &block
+        def initialize(context, name, *content_or_attributes, &block)
           @tag_name = name
-          parameters_proceeding(content_or_attributes, &block)
+          parameters_proceeding(context, content_or_attributes, &block)
         end
 
         def to_s
@@ -30,11 +30,11 @@ module Poly
             end
           end
 
-          def parameters_proceeding(content_or_attributes, &block)
+          def parameters_proceeding(context, content_or_attributes, &block)
             @tag_attributes, @tag_content =
               if block_given?
                 #[content_or_attributes.first || Hash.new, yield(self).to_s]
-                [content_or_attributes.first || {}, View.new(&block).to_s]
+                [content_or_attributes.first || {}, View.new(context, &block).to_s]
               else
                 raise 'Attributes count is invalid' if content_or_attributes.length == 0
                 [content_or_attributes.length == 1 ? {} : content_or_attributes.first, content_or_attributes.last || '']

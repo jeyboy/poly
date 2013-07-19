@@ -15,9 +15,16 @@ module Poly
         #OLD_TAG_WHITELIST = %w(acronym applet basefont big dir font frame frameset noframes strike tt)
 
         attr_writer :node_list
+        attr_accessor :current_context
 
         TAG_WHITELIST.each do |method_name|
           define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
+        end
+
+        def initialize(context, &block)
+          @current_context = context
+          extend Rails.application.routes.url_helpers
+          super(&block)
         end
 
         def node_list
@@ -32,10 +39,18 @@ module Poly
           node_list << text
         end
 
-        #def render_content(controller, *args, &block)
-        #  assign_controller(controller)
-        #  render *args, &block
+        #def instance_variable_names
+        #  current_context.instance_variable_names + super
         #end
+        #
+        #def instance_variable_get(symbol)
+        #  current_context.instance_variable_get(symbol) ||
+        #      super(symbol)
+        #end
+
+        def render(*args, &block)
+          raw current_context.render(*args, &block)
+        end
 
         #def method_missing name, *args, &block
         #  node_list << name.to_s.downcase
@@ -43,7 +58,7 @@ module Poly
 
         protected
           def proceed(name, *args, &block)
-            node_list << HtmlTag.new(name, *args, &block)
+            node_list << HtmlTag.new(current_context, name, *args, &block)
           end
       end
     end

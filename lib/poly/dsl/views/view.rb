@@ -2,6 +2,8 @@ module Poly
   module Dsl
     module Views
       class View < Base
+        #TODO: render not working
+
         TAG_WHITELIST = %w( a abbr address area article aside audio b base bdi bdo blockquote br body button canvas caption
                             cite code col colgroup command datalist dd del details dfn dialog div dl dt em embed fieldset
                             figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hr html i iframe img input ins kbd
@@ -30,9 +32,14 @@ module Poly
           node_list << text
         end
 
-        def method_missing name, *args, &block
-          node_list << name.to_s.downcase
-        end
+        #def render_content(controller, *args, &block)
+        #  assign_controller(controller)
+        #  render *args, &block
+        #end
+
+        #def method_missing name, *args, &block
+        #  node_list << name.to_s.downcase
+        #end
 
         protected
           def proceed(name, *args, &block)

@@ -21,15 +21,10 @@ module Poly
           define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
         end
 
-        if Poly.old_tags_support
-          OLD_TAG_WHITELIST.each do |method_name|
-            define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
-          end
-        end
-
         def initialize(context, &block)
           @current_context = context
           super(&block)
+          init
         end
 
         def node_list
@@ -55,6 +50,14 @@ module Poly
         protected
           def proceed(name, *args, &block)
             node_list << HtmlTag.new(current_context, name, *args, &block)
+          end
+
+          def init
+            if Poly.old_tags_support
+              OLD_TAG_WHITELIST.each do |method_name|
+                define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
+              end
+            end
           end
       end
     end

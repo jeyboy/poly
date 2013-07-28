@@ -13,7 +13,7 @@ module Poly
 
         def prepare_default
           actions.each do |action|
-            @views[action] = "#{action.capitalize}Presentation".constantize.new
+            @views[action] = "#{action.capitalize}Presentation".constantize.new(self)
           end
         end
       end

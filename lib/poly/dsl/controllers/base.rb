@@ -1,12 +1,11 @@
 module Poly
   module Dsl
     module Controllers
-      require 'inherited_resources'
-
-      class Base < InheritedResources::Base
+      class Base < ::InheritedResources::Base
         attr_reader :collection_name
         attr_reader :instance_name
         attr_accessor :namespace
+        attr_accessor :pagination_on
 
 
         #respond_to :html, :xml, :json
@@ -31,13 +30,25 @@ module Poly
         private
 
         def init(name, args)
-          @collection_name = name.tableize
-          @instance_name = @collection_name.singularize
+          @collection_name = args[:collection_name] || name.tableize
+          @instance_name = args[:instance_name] || collection_name.singularize
+          @pagination_on = args[:pagination_on] || pagination_on
+          @namespace = args[:namespace] || Poly.default_namespace
+
           defaults :resource_class => args[:resource_class] || name,
-                   :collection_name => args[:collection_name] || collection_name,
-                   :instance_name => args[:instance_name] || instance_name,
-                   :route_prefix => namespace || Poly.default_namespace
+                   :collection_name => collection_name,
+                   :instance_name =>  instance_name,
+                   :route_prefix => namespace,
+                   :route_collection_name => args[:route_collection_name] || collection_name,
+                   :route_instance_name => args[:route_instance_name] || instance_name
         end
+
+        protected
+          def collection
+            if pagination_on
+              instance_variable_set "@#{collection_name}".to_sym, end_of_association_chain.paginate(:page => params[:page])
+            end || super
+          end
       end
     end
   end

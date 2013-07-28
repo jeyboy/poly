@@ -17,7 +17,10 @@ Gem::Specification.new do |gem|
 
   #gem.add_dependency('rails', '>= 3.1.0')
   gem.add_dependency('rails', '>= 3.0')
+  gem.add_dependency('jquery-rails')
+  gem.add_dependency('sass-rails')
   gem.add_dependency('simple_form')
+  gem.add_dependency('meta_search')
   gem.add_dependency('kaminari')
   gem.add_dependency('slim-rails')
   gem.add_dependency('devise')

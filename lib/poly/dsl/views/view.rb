@@ -12,13 +12,19 @@ module Poly
                             style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr
                         )
 
-        #OLD_TAG_WHITELIST = %w(acronym applet basefont big dir font frame frameset noframes strike tt)
+        OLD_TAG_WHITELIST = %w(acronym applet basefont big dir font frame frameset noframes strike tt)
 
         attr_writer :node_list
         attr_accessor :current_context
 
         TAG_WHITELIST.each do |method_name|
           define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
+        end
+
+        if Poly.old_tags_support
+          OLD_TAG_WHITELIST.each do |method_name|
+            define_method(method_name) {|*args, &block| proceed(method_name, *args, &block) }
+          end
         end
 
         def initialize(context, &block)

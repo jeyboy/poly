@@ -11,17 +11,22 @@ module Poly
         include AbstractController::Translation
         include AbstractController::AssetPaths
         #include Rails.application.routes.url_helpers
-        self.view_paths = 'app/views'
-        #include AbstractController::Rendering
         #include ActionView::Helpers
+
+        #//////testing needed////
+        include ActionView::Helpers::UrlHelper
+        #///////////////////////
+
+        self.view_paths = 'app/views'
+
 
         def initialize &block
           instance_eval(&block) if block_given?
         end
 
-        #def _routes
-        #  @routes ||= Rails.application.routes rescue ActionDispatch::Routing::RouteSet.new
-        #end
+        def _routes
+          @routes ||= Rails.application.routes rescue ActionDispatch::Routing::RouteSet.new
+        end
 
         #def method_missing(name, *args, &block)
         #  #if name.to_s =~ /path|url/

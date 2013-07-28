@@ -23,7 +23,6 @@ module Poly
 
         def initialize(context, &block)
           @current_context = context
-          extend Rails.application.routes.url_helpers
           super(&block)
         end
 
@@ -38,15 +37,6 @@ module Poly
         def raw(text)
           node_list << text
         end
-
-        #def instance_variable_names
-        #  current_context.instance_variable_names + super
-        #end
-        #
-        #def instance_variable_get(symbol)
-        #  current_context.instance_variable_get(symbol) ||
-        #      super(symbol)
-        #end
 
         def render(*args, &block)
           raw current_context.render(*args, &block)

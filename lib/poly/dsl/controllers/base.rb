@@ -1,8 +1,9 @@
+#require "app/controllers/inherited_resources/base"
 module Poly
   module Dsl
     module Controllers
 
-      class Base# < ::InheritedResources::Base
+      class Base < ::InheritedResources::Base
         attr_reader :collection_name
         attr_reader :instance_name
         attr_accessor :namespace

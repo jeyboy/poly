@@ -9,20 +9,19 @@ require 'jquery-rails'
 require 'sass'
 
 require 'poly/engine'
-require 'poly/base'
 require 'poly/version'
-require 'poly/dsl/page'
 
 module Poly
   #autoload :Page, 'poly/dsl/page'
 
-  #class Railtie < ::Rails::Railtie
-  #  config.after_initialize do
-  #    # Add load paths straight to I18n, so engines and application can overwrite it.
-  #    require 'active_support/i18n'
-  #    I18n.load_path.unshift *Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
-  #  end
-  #end
+  class Railtie < ::Rails::Railtie
+    config.after_initialize do
+      # Add load paths straight to I18n, so engines and application can overwrite it.
+      require 'active_support/i18n'
+      require 'poly/dsl/page'
+      I18n.load_path.unshift *Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
+    end
+  end
 
   class << self
     mattr_accessor :default_paths

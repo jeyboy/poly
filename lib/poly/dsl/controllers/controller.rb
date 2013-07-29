@@ -3,12 +3,13 @@ module Poly
     module Controllers
       require 'poly/dsl/views'
 
-      class Controller < Base
+      class Controller
         cattr_accessor :views
+        cattr_accessor :controller
 
         def initialize(name, args = {}, &block)
-          super(name, args, &block)
-          instance_eval(&block) if block_given?
+          @controller = GenerateController.new(name, args, &block)
+          prepare_default
         end
 
         def prepare_default

@@ -3,9 +3,20 @@ module Poly
   module Dsl
     module Controllers
 
+
+      #class_eval %{
+      #  def #{method}
+      #    @#{method}
+      #  end
+      #  def #{method}=(v)
+      #    @#{method} = v
+      #  end
+      #}
+
       class GenerateController
-        def initialize(name, args, &block)
-          Object::const_set(name.intern, Class::new(ApplicationController) do |name, args, &block|
+        def self.proceed(name)
+          Object::const_set(name.intern, Class::new(ApplicationController) do
+            inherit_resources
             attr_reader :collection_name
             attr_reader :instance_name
             attr_accessor :namespace
@@ -24,8 +35,6 @@ module Poly
             #create!(:notice => "Dude! Nice job creating that project.") { root_url }
 
             def initialize(name, args = {}, &block)
-              inherit_resources(self)
-              instance_eval(&block) if block_given?
               instance_eval(&block) if block_given?
               init(name, args)
               #Routing.register_routes(self)
@@ -55,16 +64,6 @@ module Poly
             end
           end)
         end
-
-      #name = 'Test'
-      #Object::const_set(name.intern, Class::new do
-      #  def write
-      #    puts "TEST"
-      #  end
-      #end
-      #)
-      #Object::const_get(name).new.write   # writes => "TEST"
-
       end
     end
   end

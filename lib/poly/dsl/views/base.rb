@@ -20,7 +20,7 @@ module Poly
         self.view_paths = 'app/views'
 
 
-        def initialize &block
+        def initialize(&block)
           instance_eval(&block) if block_given?
         end
 

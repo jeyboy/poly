@@ -9,7 +9,7 @@ module Poly::Controller
 
     def prepare_default
       actions.each do |action|
-        presentations[action] = "#{action.capitalize}Presentation".constantize.new(self)
+        @presentations[action] = "#{action.capitalize}Presentation".constantize.new(self)
       end
     end
   end

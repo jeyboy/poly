@@ -16,7 +16,6 @@ module Poly::Dsl::HTML
 
     self.view_paths = 'app/views'
 
-
     def initialize(&block)
       instance_eval(&block) if block_given?
     end

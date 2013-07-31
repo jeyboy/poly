@@ -1,9 +1,10 @@
 module Poly
   module Dsl
     class Page
-      def initialize(name, args = {}, &block)
-        register_controller(name)
-        instance_eval(&block) if block_given?
+      attr_accessor :controller
+
+      def create(name, args = {}, &block)
+        @controller = register_controller(name).new(args, &block)
       end
 
       private

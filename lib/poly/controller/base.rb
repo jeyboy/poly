@@ -2,9 +2,9 @@ module Poly::Controller
   class Base < ::InheritedResources::Base
     attr_accessor :presentations, :default => {}
 
-    #class << self
-    #  public :actions
-    #end
+    class << self
+      public :actions
+    end
 
     def initialize(&block)
       instance_eval(&block) if block_given?
@@ -12,7 +12,7 @@ module Poly::Controller
     end
 
     def prepare_default
-      self.class.send(:actions).each do |action|
+      self.class.actions.each do |action|
         @presentations[action] = "#{action.capitalize}Presentation".constantize.new(self)
       end
     end

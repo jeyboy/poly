@@ -5,12 +5,14 @@ module Poly
     attr_accessor :controller
 
     def initialize(name, args = {}, &block)
-      @controller = register_controller(name).new(&block)
+       controller_class = register_controller(name, &block)
+       @controller = controller_class.new
     end
 
     private
-      def register_controller(name)
-        Construct.register_controller(name, 'Poly::Controller::Base')
+      def register_controller(name, &block)
+        Construct.register_controller2(name, &block)
+        #Construct.register_controller(name, 'Poly::Controller::Base')
       end
   end
 end

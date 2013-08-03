@@ -19,28 +19,27 @@ module Poly
         end
 
         protected
-          def format_attributes
-            case tag_attributes.class.name
-              when 'String', 'NilClass'
-                tag_attributes.to_s
-              when 'Hash'
-                "#{tag_attributes.map {|k,v| "#{k}=\"#{v}\""}.join(' ')}"
-              else
-                ''
-                #raise "Attributes presentation #{tag_attributes.class.name} not valid. Valid presentation: String or Hash"
-            end
+        def format_attributes
+          case tag_attributes.class.name
+            when 'String', 'NilClass'
+              tag_attributes.to_s
+            when 'Hash'
+              "#{tag_attributes.map {|k,v| "#{k}=\"#{v}\""}.join(' ')}"
+            else
+              raise "Attributes presentation #{tag_attributes.class.name} not valid. Valid presentation: String or Hash"
           end
+        end
 
-          def parameters_proceeding(context, content_or_attributes, &block)
-            @tag_attributes, @tag_content =
+        def parameters_proceeding(context, content_or_attributes, &block)
+          @tag_attributes, @tag_content =
               if block_given?
-                #[content_or_attributes.first || Hash.new, yield.to_s]
+                #[content_or_attributes.first || Hash.new, yield(self).to_s]
                 [content_or_attributes.first || {}, HtmlBlock.new(context, &block).to_s]
               else
                 raise 'Attributes count is invalid' if content_or_attributes.length == 0
                 [content_or_attributes.length == 1 ? {} : content_or_attributes.first, content_or_attributes.last || '']
               end
-          end
+        end
 
         def delimiter_tag
           "<#{[tag_name, format_attributes].join(' ')}>"

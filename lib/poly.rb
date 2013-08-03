@@ -12,17 +12,16 @@ require 'poly/engine'
 require 'poly/version'
 require 'poly/global'
 
-require 'poly/dsl/html/html_block'
+#require 'poly/dsl/html/html_block'
 
 module Poly
-  #autoload :Page, 'poly/dsl/page'
+  autoload :Page, 'poly/page'
 
   class Railtie < ::Rails::Railtie
     config.after_initialize do
-      # Add load paths straight to I18n, so engines and application can overwrite it.
       require 'active_support/i18n'
-      require 'poly/page'
-      I18n.load_path.unshift *Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
+      #require 'poly/page'
+      I18n.load_path.unshift *Dir[File.expand_path('../poly/locales/*.yml', __FILE__)]
     end
   end
 
@@ -33,11 +32,19 @@ module Poly
     mattr_accessor :default_namespace
     self.default_paths = 'admin'
 
-    mattr_accessor :old_tags_support
-    self.old_tags_support = false
+    #mattr_accessor :old_tags_support
+    #self.old_tags_support = false
 
     def setup
       yield self
+    end
+
+    def register_model model, *options, &block
+      Page.new(model.name, *options, &block)
+    end
+
+    def register_page name, *options, &block
+      Page.new(name, *options, &block)
     end
   end
 end

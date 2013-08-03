@@ -1,16 +1,16 @@
 module Poly
-  module Dsl
-    class Page
-      attr_accessor :controller
+  require 'poly/controller/base'
 
-      def create(name, args = {}, &block)
-        @controller = register_controller(name).new(args, &block)
-      end
+  class Page
+    attr_accessor :controller
 
-      private
-        def register_controller(name)
-          Construct.register_controller(name, 'Poly::Controller::Base')
-        end
+    def initialize(name, args = {}, &block)
+      @controller = register_controller(name).new(&block)
     end
+
+    private
+      def register_controller(name)
+        Construct.register_controller(name, 'Poly::Controller::Base')
+      end
   end
 end

@@ -16,7 +16,7 @@ module Poly
                             style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr
                         )
 
-        OLD_TAG_WHITELIST = %w(acronym applet basefont big dir font frame frameset noframes strike tt)
+        #OLD_TAG_WHITELIST = %w(acronym applet basefont big dir font frame frameset noframes strike tt)
 
         attr_accessor :node_list, :default => []
         attr_accessor :current_context
@@ -48,16 +48,16 @@ module Poly
 
         protected
           def proceed(name, *args, &block)
-            node_list << HtmlTag.new(current_context, name, *args, &block)
+            node_list << HtmlTag.new(current_context, name, args, &block)
           end
 
           def init(context)
             @current_context = context
-            if Poly.old_tags_support
-              OLD_TAG_WHITELIST.each do |method_name|
-                define_method(method_name) {|*args, &block| proceed(method_name, args, &block) }
-              end
-            end
+            #if Poly.old_tags_support
+            #  OLD_TAG_WHITELIST.each do |method_name|
+            #    define_method(method_name) {|*args, &block| proceed(method_name, args, &block) }
+            #  end
+            #end
           end
       end
     end

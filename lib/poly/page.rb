@@ -4,15 +4,17 @@ module Poly
   class Page
     attr_accessor :controller
 
+    delegate :register_controller, :to => 'Construct'
+
     def initialize(name, args = {}, &block)
-       controller_class = register_controller(name, &block)
-       @controller = controller_class.new
+       controller_class = register_controller(name, 'Poly::Controller::Base')
+       @controller = controller_class.new(&block)
     end
 
-    private
-      def register_controller(name, &block)
-        Construct.register_controller2(name, &block)
-        #Construct.register_controller(name, 'Poly::Controller::Base')
-      end
+    #private
+    #  def register_controller(name)
+    #    Construct.register_controller(name)
+    #    #Construct.register_controller(name, 'Poly::Controller::Base')
+    #  end
   end
 end

@@ -39,11 +39,11 @@ module Poly
       yield self
     end
 
-    def register_model model, *options, &block
+    def register_model(model, *options, &block)
       Page.new(model.name, *options, &block)
     end
 
-    def register_page name, *options, &block
+    def register_page(name, *options, &block)
       Page.new(name, *options, &block)
     end
   end

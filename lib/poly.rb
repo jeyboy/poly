@@ -30,7 +30,7 @@ module Poly
     self.default_paths = %w(app/admin)
 
     mattr_accessor :default_namespace
-    self.default_paths = 'admin'
+    self.default_namespace = 'admin'
 
     #mattr_accessor :old_tags_support
     #self.old_tags_support = false

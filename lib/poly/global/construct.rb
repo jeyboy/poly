@@ -1,13 +1,13 @@
 class Construct
   class << self
-    def register_controller(name, superclass = nil)
-      name = "::#{name.pluralize}Controller"
+    def register_controller(name, superclass = nil, namespace = nil)
+      namespace = namespace.titleize
+      register_module(namespace) unless Object.const_defined?(namespace)
+      name = "::#{[namespace, "#{name.pluralize}Controller"].compact.join('::')}"
       eval %{
         class #{name}#{" < #{superclass}" if superclass}
         end
       }
-
-      #eval "class #{name}#{" < #{superclass}" if superclass}\n end"
       name.constantize
     end
 

@@ -7,8 +7,12 @@ module Poly
     delegate :register_controller, :to => 'Construct'
 
     def initialize(name, args = {}, &block)
-       controller_class = register_controller(name, 'Poly::Controller::Base')
-       @controller = controller_class.new(&block)
+      args.stringify_keys!
+      @controller = register_controller(
+           name,
+           'Poly::Controller::Base',
+           args['namespace'] || Poly.default_namespace
+       ).new(&block)
     end
   end
 end

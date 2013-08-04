@@ -1,6 +1,13 @@
 module Poly::Controller
+  require 'poly/controller/content_for_extender'
+  require 'poly/view/presentations'
+
   class Base < ::InheritedResources::Base
-    attr_accessor :presentations, :default => {}
+    extend ContentForExtender
+
+    layout :poly
+
+    attr_accessor :presentations
 
     class << self
       public :defaults
@@ -11,42 +18,26 @@ module Poly::Controller
 
     def initialize(&block)
       instance_eval(&block) if block_given?
-      prepare_default
+      prepare_views
     end
 
     def method_missing(name, *args, &block)
-      self.class.send name, *args, &block
+      self.class.send(name, *args, &block)
     end
 
-    #def defaults(options)
-    #  self.class.defaults(options)
-    #end
-    #
-    ## Defines which actions will be inherited from the controller.
-    ## Syntax is borrowed from resource_controller.
-    ##
-    ##   actions :index, :show, :edit
-    ##   actions :all, :except => :index
-    ##
-    #def actions(*actions_to_keep)
-    #  self.class.actions(actions_to_keep)
-    #end
-    #
-    ## Defines custom restful actions by resource or collection basis.
-    ##
-    ##   custom_actions :resource => [:delete, :transit], :collection => :search
-    #def custom_actions(options)
-    #
-    #end
-    #
-    #def respond_to
-    #
-    #end
+    protected
+      def prepare_views
+        @presentations = {}
+        prepared_actions.each do |action|
+          if self.respond_to? action
+            @presentations[action] = "::Poly::View::Presentations::#{action.capitalize}Presentation".constantize.new(self)
+          end
+        end
+      end
 
-    def prepare_default
-      #self.class.actions.each do |action|
-      #  @presentations[action] = "#{action.capitalize}Presentation".constantize.new(self)
-      #end
-    end
+      def prepared_actions
+        excepted_actions = [:create, :update, :destroy]
+        ::InheritedResources::ACTIONS.reject {|a| excepted_actions.include?(a) }
+      end
   end
 end

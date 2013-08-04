@@ -1,7 +1,7 @@
 module Poly
   module View
     module Presentations
-      class CustomPresentation < Base
+      class NewPresentation < Base
         private
           def prepare_default(context)
 

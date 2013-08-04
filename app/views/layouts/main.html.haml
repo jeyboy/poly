@@ -1,0 +1,9 @@
+!!!
+%html
+  %head
+    %title PolyInclusion
+    = stylesheet_link_tag    'poly', :media => 'all'
+    = javascript_include_tag 'poly'
+    = csrf_meta_tags
+  %body
+    = yield

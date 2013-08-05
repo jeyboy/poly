@@ -14,5 +14,13 @@ module Poly
            args['namespace'] || Poly.default_namespace
        ).new(&block)
     end
+
+    def is_singleton_resource?
+      configuration[:singleton] == true
+    end
+
+    def configuration
+      controller.resources_configuration[:self]
+    end
   end
 end

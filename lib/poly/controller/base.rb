@@ -8,6 +8,7 @@ module Poly::Controller
     layout :poly
 
     attr_accessor :presentations
+    attr_reader :actions_list
 
     class << self
       public :defaults
@@ -37,7 +38,7 @@ module Poly::Controller
 
       def prepared_actions
         excepted_actions = [:create, :update, :destroy]
-        ::InheritedResources::ACTIONS.reject {|a| excepted_actions.include?(a) }
+        @actions_list = ::InheritedResources::ACTIONS.reject {|a| excepted_actions.include?(a) }
       end
   end
 end

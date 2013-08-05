@@ -8,14 +8,7 @@ module Poly
           _routes.clear!
           Rails.application.routes_reloader.paths.each{ |path| load(path) }
           _routes.draw do
-            if page.is_singleton_resource?
-
-            else
-
-            end
-            # here you can add any route you want
-            #get "/test#{rand(1000000)}", :to => "sessions#new"
-
+            register_namespace(page)
           end
           ActiveSupport.on_load(:action_controller) { _routes.finalize! }
         ensure
@@ -55,15 +48,48 @@ module Poly
       #page.controller.resources_configuration[:request_name]
 
       private
-        def route_name(page)
-          if page.is_singleton_resource?
-            page.configuration[:instance_name]
-          end || page.configuration[:collection_name]
+        def register_namespace(page)
+          if page.configuration[:route_prefix]
+            namespace page.configuration[:route_prefix] do
+              register_resource(page)
+            end
+          else
+            register_resource(page)
+          end
         end
 
-        def sym_route_name(page)
-          route_name(page).to_sym
+        def register_resource(page)
+          if page.is_singleton_resource?
+            resource page.configuration[:instance_name].to_sym,
+                     only: page.controller.actions_list,
+                     controller: page.controller.name.tableize do
+              register_custom_actions(page)
+            end
+          else
+            resources page.configuration[:collection_name].to_sym,
+                      only: page.controller.actions_list,
+                      controller: page.controller.name.tableize do
+              register_custom_actions(page)
+            end
+          end
         end
+
+      def register_custom_actions(page)
+        page.configuration[:custom_actions].each_pair do |type, action|
+
+        end
+
+        #with id
+        member do
+          get 'preview'
+        end
+
+        #without id
+
+        collection do
+
+        end
+      end
     end
   end
 end

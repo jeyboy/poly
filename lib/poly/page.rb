@@ -1,5 +1,6 @@
 module Poly
   require 'poly/controller/base'
+  require 'poly/routing'
 
   class Page
     attr_accessor :controller
@@ -13,6 +14,7 @@ module Poly
            'Poly::Controller::Base',
            args['namespace'] || Poly.default_namespace
        ).new(&block)
+      Routing.register_routes(self)
     end
 
     def is_singleton_resource?

@@ -1,6 +1,18 @@
 module Poly
   class Routing
     class << self
+      #singleton   = page.controller.resources_configuration[:self][:singleton]
+      #polymorphic = page.controller.parents_symbols.include?(:polymorphic)
+      #actions = page.controller.actions_list
+      #custom_actions = page.controller.resources_configuration[:self][:custom_actions]
+
+      #page.controller.resources_configuration[:route_collection_name]
+      #page.controller.resources_configuration[:route_instance_name]
+      #page.controller.resources_configuration[:instance_name]
+      #page.controller.resources_configuration[:collection_name]
+      #page.controller.resources_configuration[:route_prefix]
+      #page.controller.resources_configuration[:request_name]
+
       def register_routes(page)
         begin
           _routes = Rails.application.routes
@@ -14,38 +26,7 @@ module Poly
         ensure
           _routes.disable_clear_and_finalize = false
         end
-
-
-
-        ##custom_actions :resource => :delete, :collection => :search
-
-        #resource sym_route_name(page), page.actions
-        #
-        #Rails.application.routes.draw do
-        #  page.custom_actions.each_pair do |relation, action|
-        #    case relation
-        #      when :resource
-        #
-        #      when :collection
-        #
-        #      else
-        #        raise Exception.new 'unknown custom action type'
-        #    end
-        #  end
-        #end
       end
-
-      #singleton   = page.controller.resources_configuration[:self][:singleton]
-      #polymorphic = page.controller.parents_symbols.include?(:polymorphic)
-      #actions = page.controller.actions_list
-      #custom_actions = page.controller.resources_configuration[:self][:custom_actions]
-
-      #page.controller.resources_configuration[:route_collection_name]
-      #page.controller.resources_configuration[:route_instance_name]
-      #page.controller.resources_configuration[:instance_name]
-      #page.controller.resources_configuration[:collection_name]
-      #page.controller.resources_configuration[:route_prefix]
-      #page.controller.resources_configuration[:request_name]
 
       private
         def register_namespace(page)

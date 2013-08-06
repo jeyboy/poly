@@ -75,19 +75,26 @@ module Poly
         end
 
       def register_custom_actions(page)
-        page.configuration[:custom_actions].each_pair do |type, action|
+        members = page.configuration[:custom_actions][:resource]
+        collections = page.configuration[:custom_actions][:collection]
+        controller_name = page.controller.name.tableize
 
+        if members.present?
+          #with id
+          member do
+            members.each do |action|
+              match action, to: "#{controller_name}##{action}", via: :all
+            end
+          end
         end
 
-        #with id
-        member do
-          get 'preview'
-        end
-
-        #without id
-
-        collection do
-
+        if collections.present?
+          #without id
+          collection do
+            collections.each do |action|
+              match action, to: "#{controller_name}##{action}", via: :all
+            end
+          end
         end
       end
     end

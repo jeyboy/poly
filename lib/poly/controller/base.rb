@@ -1,13 +1,16 @@
 module Poly::Controller
   require 'poly/controller/content_for_extender'
+  require 'poly/controller/pagination_extender'
   require 'poly/view/presentations'
 
   class Base < ::InheritedResources::Base
-    extend ContentForExtender
+    include ContentForExtender
+    include PaginationExtender
 
     layout :poly
 
     attr_accessor :presentations
+    attr_accessor :pagination_on
     attr_reader :actions_list
 
     class << self
@@ -24,6 +27,10 @@ module Poly::Controller
 
     def method_missing(name, *args, &block)
       self.class.send(name, *args, &block)
+    end
+
+    def configuration
+      resources_configuration[:self]
     end
 
     protected

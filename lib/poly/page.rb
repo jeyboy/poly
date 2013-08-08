@@ -6,6 +6,7 @@ module Poly
     attr_accessor :controller
 
     delegate :register_controller, :to => 'Construct'
+    delegate :configuration, :to => 'controller'
 
     def initialize(name, args = {}, &block)
       args.stringify_keys!
@@ -19,10 +20,6 @@ module Poly
 
     def is_singleton_resource?
       configuration[:singleton] == true
-    end
-
-    def configuration
-      controller.resources_configuration[:self]
     end
   end
 end

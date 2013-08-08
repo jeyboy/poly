@@ -19,63 +19,56 @@ module Poly
           _routes.disable_clear_and_finalize = true
           _routes.clear!
           Rails.application.routes_reloader.paths.each{ |path| load(path) }
+
+          namespace = page.configuration[:route_prefix]
+          controller_name = page.controller.name.tableize
+
           _routes.draw do
-            register_namespace(page)
+            block = %{
+              #{"namespace '#{namespace}' do" if namespace.present?}
+                #{(page.is_singleton_resource? ? "resource :#{page.configuration[:instance_name].to_sym}" :
+                    "resources :#{page.configuration[:collection_name].to_sym}")},
+                         only: #{page.controller.actions_list.inspect},
+                         controller: '#{controller_name}' do
+                  #{
+                    if page.configuration[:custom_actions]
+                      members = page.configuration[:custom_actions][:resource]
+                      collections = page.configuration[:custom_actions][:collection]
+
+                      if members.present?
+                        %{
+                          member do
+                            #{
+                              members.each do |action|
+                                "match '#{action}', to: '#{controller_name}##{action}', via: :all"
+                              end
+                            }
+                          end
+                        }
+                      end
+
+                      if collections.present?
+                        %{
+                          collection do
+                            #{
+                              collections.each do |action|
+                                "match '#{action}', to: '#{controller_name}##{action}', via: :all"
+                              end
+                            }
+                          end
+                        }
+                      end
+                    end
+                  }
+                end
+              #{'end' if namespace.present?}
+            }
+
+            eval block
           end
           ActiveSupport.on_load(:action_controller) { _routes.finalize! }
         ensure
           _routes.disable_clear_and_finalize = false
-        end
-      end
-
-      private
-        def register_namespace(page)
-          if page.configuration[:route_prefix]
-            namespace page.configuration[:route_prefix] do
-              register_resource(page)
-            end
-          else
-            register_resource(page)
-          end
-        end
-
-        def register_resource(page)
-          if page.is_singleton_resource?
-            resource page.configuration[:instance_name].to_sym,
-                     only: page.controller.actions_list,
-                     controller: page.controller.name.tableize do
-              register_custom_actions(page)
-            end
-          else
-            resources page.configuration[:collection_name].to_sym,
-                      only: page.controller.actions_list,
-                      controller: page.controller.name.tableize do
-              register_custom_actions(page)
-            end
-          end
-        end
-
-      def register_custom_actions(page)
-        members = page.configuration[:custom_actions][:resource]
-        collections = page.configuration[:custom_actions][:collection]
-        controller_name = page.controller.name.tableize
-
-        if members.present?
-          #with id
-          member do
-            members.each do |action|
-              match action, to: "#{controller_name}##{action}", via: :all
-            end
-          end
-        end
-
-        if collections.present?
-          #without id
-          collection do
-            collections.each do |action|
-              match action, to: "#{controller_name}##{action}", via: :all
-            end
-          end
         end
       end
     end

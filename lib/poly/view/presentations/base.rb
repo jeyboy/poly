@@ -3,6 +3,12 @@ module Poly
     module Presentations
       require 'poly/dsl/html'
       class Base < ::Poly::Dsl::Html::HtmlBlock
+        class << self
+          def content(context, &block)
+            self.class.new(context, &block)
+          end
+        end
+
         def initialize(context, &block)
           if block_given?
             super(context, &block)

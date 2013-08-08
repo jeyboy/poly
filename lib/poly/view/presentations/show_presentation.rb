@@ -4,7 +4,9 @@ module Poly
       class ShowPresentation < Base
         private
           def prepare_default(context)
-
+            div do
+              p 'Show'
+            end
           end
       end
     end

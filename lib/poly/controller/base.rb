@@ -1,11 +1,13 @@
 module Poly::Controller
   require 'poly/controller/content_for_extender'
   require 'poly/controller/pagination_extender'
+  require 'poly/controller/actions_extender'
   require 'poly/view/presentations'
 
   class Base < ::InheritedResources::Base
     include ContentForExtender
     include PaginationExtender
+    include ActionsExtender
 
     layout :poly
 
@@ -37,15 +39,19 @@ module Poly::Controller
       def prepare_views
         @presentations = {}
         prepared_actions.each do |action|
-          if self.respond_to? action
-            @presentations[action] = "::Poly::View::Presentations::#{action.capitalize}Presentation".constantize.new(self)
-          end
+          @presentations[action] = "::Poly::View::Presentations::#{action.capitalize}Presentation".constantize.new(self)
         end
       end
 
       def prepared_actions
+        @actions_list = []
+
+        ::InheritedResources::ACTIONS.each do |action|
+          @actions_list << action if self.respond_to?(action)
+        end
+
         excepted_actions = [:create, :update, :destroy]
-        @actions_list = ::InheritedResources::ACTIONS.reject {|a| excepted_actions.include?(a) }
+        @actions_list.reject {|a| excepted_actions.include?(a) }
       end
   end
 end

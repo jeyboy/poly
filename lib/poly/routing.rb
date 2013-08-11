@@ -21,7 +21,7 @@ module Poly
           Rails.application.routes_reloader.paths.each{ |path| load(path) }
 
           namespace = page.configuration[:route_prefix]
-          controller_name = page.controller.name.tableize
+          controller_name = page.controller.controller_name.tableize
 
           _routes.draw do
             block = %{
